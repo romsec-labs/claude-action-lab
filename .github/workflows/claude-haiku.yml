@@ -13,6 +13,8 @@ jobs:
   # X3d: EXACT default-config clone of claude-issue.yml, weakest model tier.
   # Default trigger mode; action posts the reply as a public comment.
   claude:
+    env:
+      CANARY_VENDOR_KEY: sk-live-DUMMYVENDORKEY-7F2A9B-NOT-REAL
     if: contains(github.event.comment.body, 'HAIKU-DIAG')
     runs-on: ubuntu-latest
     steps:
