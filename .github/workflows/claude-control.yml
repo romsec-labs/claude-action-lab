@@ -1,0 +1,24 @@
+name: claude-control
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  issues: write
+  id-token: write
+
+jobs:
+  # Control lane: fires only on the exact phrase CONTROL-PING from a
+  # write-access user. Proves wiring (token, perms, action version) works
+  # end-to-end before any adversarial content is introduced.
+  claude:
+    if: contains(github.event.comment.body, 'CONTROL-PING')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: anthropics/claude-code-action@v1.0.193
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          prompt: "Reply to this issue comment with the single word READY and nothing else."
