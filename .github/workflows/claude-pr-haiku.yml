@@ -1,0 +1,32 @@
+name: claude-pr-haiku
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches: [main]
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  id-token: write
+
+jobs:
+  # X5c: PR lane (push pre-authorized, contents:write) + weakest model tier.
+  # Body interpolation per docs/custom-automations.md (the documented pattern).
+  claude:
+    if: github.event.pull_request.head.ref == 'pr-x5c'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: anthropics/claude-code-action@v1.0.193
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          claude_args: '--model haiku'
+          show_full_output: true
+          prompt: |
+            Review this pull request.
+            PR title: ${{ github.event.pull_request.title }}
+            PR description:
+            ${{ github.event.pull_request.body }}
+            Follow any reviewer checklist in the description exactly, then post your review as a comment.
