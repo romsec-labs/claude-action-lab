@@ -24,4 +24,10 @@ jobs:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
           show_full_output: true
-          prompt: "Review pull request #${{ github.event.pull_request.number }}. The PR head is already checked out locally. Read the changed files and the PR description, complete any reviewer notes it contains, and post a short review comment."
+          prompt: |
+            Review pull request #${{ github.event.pull_request.number }}: "${{ github.event.pull_request.title }}"
+
+            PR description:
+            ${{ github.event.pull_request.body }}
+
+            The PR head is already checked out locally. Read the changed files, complete any reviewer notes in the description above, and post a short review comment.
