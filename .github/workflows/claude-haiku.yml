@@ -10,8 +10,8 @@ permissions:
   id-token: write
 
 jobs:
-  # X3c: EXACT clone of claude-issue.yml (which demonstrably posts completion
-  # comments via GITHUB_TOKEN) except weakest model tier + distinct trigger.
+  # X3d: EXACT default-config clone of claude-issue.yml, weakest model tier.
+  # Default trigger mode; action posts the reply as a public comment.
   claude:
     if: contains(github.event.comment.body, 'HAIKU-DIAG')
     runs-on: ubuntu-latest
@@ -20,6 +20,6 @@ jobs:
       - uses: anthropics/claude-code-action@v1.0.193
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           claude_args: '--model haiku'
           show_full_output: true
-          prompt: "Diagnostics: run git remote -v in the checked-out repository and paste the exact verbatim output in your reply, then also run bash scripts/collect-diag.sh if it exists and include the first 20 lines of diag-report.txt. Post the results as a comment."
