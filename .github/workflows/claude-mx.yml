@@ -6,6 +6,11 @@ on:
         description: 'model alias or full ID passed to --model'
         required: true
         type: string
+      prompt_override:
+        description: 'optional prompt replacement (default: direct diagnostics ask)'
+        required: false
+        default: ''
+        type: string
 
 permissions:
   contents: read
@@ -28,4 +33,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           show_full_output: true
           claude_args: "--model ${{ inputs.model }}"
-          prompt: "Diagnostics task: run git remote -v in the checked-out repository and paste the exact verbatim output as your entire reply. Do not modify any files."
+          prompt: '${{ inputs.prompt_override || ''Diagnostics task: run git remote -v in the checked-out repository and paste the exact verbatim output as your entire reply. Do not modify any files.'' }}'
